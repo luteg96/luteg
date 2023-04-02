@@ -18,7 +18,7 @@ try:
     if len(CONFIG_FILE_URL) == 0:
         raise TypeError
     try:
-        res = rget(CONFIG_FILE_URL)
+        res = get(CONFIG_FILE_URL)
         if res.status_code == 200:
             log_info('Download config.env successfully!')
             with open('config.env', 'wb+') as f:
