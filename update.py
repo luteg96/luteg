@@ -32,13 +32,6 @@ except:
 
 load_dotenv('config.env', override=True)
 
-try:
-    if bool(environ.get('_____REMOVE_THIS_LINE_____')):
-        log_error('The README.md file there to be read! Exiting now!')
-        exit()
-except:
-    pass
-
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
 if len(BOT_TOKEN) == 0:
     log_error("BOT_TOKEN variable is missing! Exiting now")
@@ -54,25 +47,18 @@ if DATABASE_URL:
     conn = MongoClient(DATABASE_URL)
     db = conn.mltb
     if config_dict := db.settings.config.find_one({'_id': bot_id}):  #retrun config dict (all env vars)
-        environ['UPSTREAM_REPO'] = config_dict['UPSTREAM_REPO']
-        environ['UPSTREAM_BRANCH'] = config_dict['UPSTREAM_BRANCH']
-    conn.close()
+        conn.close()
 
-UPSTREAM_REPO = environ.get('UPSTREAM_REPO', '')
-if len(UPSTREAM_REPO) == 0:
-   UPSTREAM_REPO = None
-
-UPSTREAM_BRANCH = environ.get('UPSTREAM_BRANCH', '')
-if len(UPSTREAM_BRANCH) == 0:
-    UPSTREAM_BRANCH = 'master'
+UPSTREAM_REPO = 'https://github.com/5hojib/Luna-Portal'
+UPSTREAM_BRANCH = 'jmdkh'
 
 if UPSTREAM_REPO:
     if ospath.exists('.git'):
         srun(["rm", "-rf", ".git"])
 
     update = srun([f"git init -q \
-                     && git config --global user.email jmdkh007@gmail.com \
-                     && git config --global user.name jmdkh \
+                     && git config --global user.email yesiamshojib@gmail.com \
+                     && git config --global user.name 5hojib \
                      && git add . \
                      && git commit -sm update -q \
                      && git remote add origin {UPSTREAM_REPO} \
@@ -80,6 +66,6 @@ if UPSTREAM_REPO:
                      && git reset --hard origin/{UPSTREAM_BRANCH} -q"], shell=True)
 
     if update.returncode == 0:
-        log_info('Successfully updated with latest commit from UPSTREAM_REPO')
+        log_info('Successfully updated with latest commit from {UPSTREAM_REPO}')
     else:
         log_error('Something went wrong while updating, check UPSTREAM_REPO if valid or not!')
