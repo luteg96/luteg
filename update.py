@@ -3,7 +3,6 @@ from os import path as ospath, environ
 from subprocess import run as srun
 from dotenv import load_dotenv
 from pymongo import MongoClient
-from requests import get
 
 if ospath.exists('log.txt'):
     with open('log.txt', 'r+') as f:
@@ -12,23 +11,6 @@ if ospath.exists('log.txt'):
 basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     handlers=[FileHandler('log.txt'), StreamHandler()],
                     level=INFO)
-
-CONFIG_FILE_URL = environ.get('CONFIG_FILE_URL')
-try:
-    if len(CONFIG_FILE_URL) == 0:
-        raise TypeError
-    try:
-        res = get(CONFIG_FILE_URL)
-        if res.status_code == 200:
-            log_info('Download config.env successfully!')
-            with open('config.env', 'wb+') as f:
-                f.write(res.content)
-        else:
-            log_error(f"Failed to download config.env {res.status_code}")
-    except Exception as e:
-        log_error(f"CONFIG_FILE_URL: {e}")
-except:
-    pass
 
 load_dotenv('config.env', override=True)
 
@@ -49,7 +31,7 @@ if DATABASE_URL:
     if config_dict := db.settings.config.find_one({'_id': bot_id}):  #retrun config dict (all env vars)
         conn.close()
 
-UPSTREAM_REPO = 'https://github.com/5hojib/Luna-Portal'
+UPSTREAM_REPO = 'https://github.com/luteg96/Luna-Portal'
 UPSTREAM_BRANCH = 'jmdkh'
 
 if UPSTREAM_REPO:
@@ -57,8 +39,8 @@ if UPSTREAM_REPO:
         srun(["rm", "-rf", ".git"])
 
     update = srun([f"git init -q \
-                     && git config --global user.email yesiamshojib@gmail.com \
-                     && git config --global user.name 5hojib \
+                     && git config --global user.email galuhas90@gmail.com \
+                     && git config --global user.name luteg96 \
                      && git add . \
                      && git commit -sm update -q \
                      && git remote add origin {UPSTREAM_REPO} \
